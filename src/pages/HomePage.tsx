@@ -226,8 +226,8 @@ export const HomePage: React.FC = () => {
             </p>
           </div>
 
-          {/* Vertical Stacked Cards */}
-          <div className="flex flex-col gap-2.5 sm:gap-3 max-w-3xl mx-auto">
+          {/* 2x2 Grid of Luxury Benefit Cards (2 par 2) */}
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-4 max-w-4xl mx-auto">
             {[
               {
                 title: t.benefits.b1Title,
@@ -254,16 +254,16 @@ export const HomePage: React.FC = () => {
               return (
                 <div
                   key={idx}
-                  className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 shadow-sm hover:bg-white/15 hover:border-velenora-teal-light/50 transition-all duration-300 flex items-start sm:items-center gap-3 sm:gap-3.5 group"
+                  className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 shadow-sm hover:bg-white/15 hover:border-velenora-teal-light/50 transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center gap-2.5 sm:gap-3.5 group"
                 >
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-velenora-teal/25 text-[#4FE3C1] border border-velenora-teal/40 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-sm">
-                    <IconComp className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-velenora-teal/25 text-[#4FE3C1] border border-velenora-teal/40 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-sm">
+                    <IconComp className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <div className="space-y-0.5">
-                    <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-[#4FE3C1] transition-colors">
+                    <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-[#4FE3C1] transition-colors leading-tight">
                       {b.title}
                     </h3>
-                    <p className="text-[11px] sm:text-xs text-velenora-ivory/80 leading-relaxed font-light">
+                    <p className="text-[10px] sm:text-xs text-velenora-ivory/80 leading-relaxed font-light">
                       {b.desc}
                     </p>
                   </div>
