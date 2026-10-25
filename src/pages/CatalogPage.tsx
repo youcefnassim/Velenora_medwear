@@ -1,9 +1,19 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useI18n } from '../i18n/context';
 import { CATEGORIES } from '../data/products';
 import { useProducts } from '../features/catalog/productStore';
-import { Sparkles, SlidersHorizontal, ArrowUpDown, Package } from 'lucide-react';
+import {
+  Sparkles,
+  SlidersHorizontal,
+  ArrowUpDown,
+  Package,
+  ChevronDown,
+  Check,
+  Clock,
+  TrendingUp,
+  TrendingDown,
+} from 'lucide-react';
 
 export const CatalogPage: React.FC = () => {
   const { t, formatPrice } = useI18n();
@@ -16,7 +26,29 @@ export const CatalogPage: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState<string>('all');
   const [selectedColor, setSelectedColor] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('featured');
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
+        setIsSortOpen(false);
+      }
+    };
+    document.addEventListener('pointerdown', handleClickOutside);
+    return () => document.removeEventListener('pointerdown', handleClickOutside);
+  }, []);
+
+  const sortOptions = [
+    { id: 'featured', label: t.catalog.featured, icon: Sparkles },
+    { id: 'newest', label: t.catalog.newest, icon: Clock },
+    { id: 'price_asc', label: t.catalog.priceAsc, icon: TrendingUp },
+    { id: 'price_desc', label: t.catalog.priceDesc, icon: TrendingDown },
+  ];
+
+  const activeSortOption = sortOptions.find((o) => o.id === sortBy) || sortOptions[0];
 
   // Filter products dynamically
   const filteredProducts = useMemo(() => {
@@ -101,18 +133,60 @@ export const CatalogPage: React.FC = () => {
             <span>Filtres</span>
           </button>
 
-          <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-velenora-grey/80 shadow-sm text-xs">
-            <ArrowUpDown className="w-3.5 h-3.5 text-velenora-charcoal/60" />
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="bg-transparent border-none text-velenora-navy font-semibold focus:outline-none cursor-pointer"
+          {/* Custom Luxury Sort Dropdown */}
+          <div ref={sortRef} className="relative z-30">
+            <button
+              type="button"
+              onClick={() => setIsSortOpen((prev) => !prev)}
+              className="flex items-center gap-2.5 bg-white px-3.5 py-2.5 rounded-xl border border-velenora-grey/80 shadow-sm hover:border-velenora-navy transition-all duration-200 text-xs font-semibold text-velenora-navy focus:outline-none focus:ring-2 focus:ring-velenora-teal/30 cursor-pointer"
+              aria-expanded={isSortOpen}
+              aria-haspopup="listbox"
             >
-              <option value="featured">{t.catalog.featured}</option>
-              <option value="newest">{t.catalog.newest}</option>
-              <option value="price_asc">{t.catalog.priceAsc}</option>
-              <option value="price_desc">{t.catalog.priceDesc}</option>
-            </select>
+              <ArrowUpDown className="w-3.5 h-3.5 text-velenora-teal shrink-0" />
+              <span>{activeSortOption.label}</span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 text-velenora-charcoal/60 transition-transform duration-200 shrink-0 ${
+                  isSortOpen ? 'rotate-180 text-velenora-navy' : ''
+                }`}
+              />
+            </button>
+
+            {isSortOpen && (
+              <div className="absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-md rounded-2xl border border-velenora-grey/80 shadow-luxury-lg p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div className="px-2.5 py-1 text-[10px] font-bold text-velenora-charcoal/60 uppercase tracking-wider border-b border-velenora-grey/40 mb-1">
+                  Trier la collection
+                </div>
+                <div className="space-y-0.5" role="listbox">
+                  {sortOptions.map((opt) => {
+                    const isSel = opt.id === sortBy;
+                    const Icon = opt.icon;
+                    return (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        role="option"
+                        aria-selected={isSel}
+                        onClick={() => {
+                          setSortBy(opt.id);
+                          setIsSortOpen(false);
+                        }}
+                        className={`w-full px-3 py-2 rounded-xl text-xs font-semibold text-left transition-all duration-150 flex items-center justify-between cursor-pointer ${
+                          isSel
+                            ? 'bg-velenora-navy text-white shadow-xs'
+                            : 'text-velenora-navy hover:bg-velenora-grey/30 hover:text-velenora-teal'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Icon className={`w-3.5 h-3.5 ${isSel ? 'text-velenora-teal-light' : 'text-velenora-charcoal/60'}`} />
+                          <span>{opt.label}</span>
+                        </div>
+                        {isSel && <Check className="w-3.5 h-3.5 text-white stroke-[2.5]" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
