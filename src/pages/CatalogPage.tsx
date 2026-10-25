@@ -284,14 +284,14 @@ export const CatalogPage: React.FC = () => {
                   key={prod.id}
                   className="bg-white rounded-2xl border border-velenora-grey/80 shadow-luxury hover:shadow-luxury-lg transition duration-300 overflow-hidden flex flex-col justify-between group"
                 >
-                  <div className="relative h-64 overflow-hidden bg-velenora-grey/30">
+                  <div className="relative h-80 sm:h-96 overflow-hidden bg-gradient-to-b from-[#FAFBFD] to-[#F1F3F5] flex items-center justify-center p-2 sm:p-3">
                     <img
                       src={prod.images[0] || '/images/tryon/men-front-clean.jpg'}
                       alt={prod.name.fr}
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = '/images/tryon/men-front-clean.jpg';
                       }}
-                      className="w-full h-full object-cover object-top transition duration-500 group-hover:scale-105"
+                      className="w-full h-full object-contain object-center transition duration-500 group-hover:scale-105"
                     />
                     {prod.isCustomizable && (
                       <span className="absolute top-3 left-3 bg-velenora-navy/90 backdrop-blur-sm text-velenora-ivory text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">

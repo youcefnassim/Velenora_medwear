@@ -53,14 +53,14 @@ export const ProductDetailPage: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         <div className="lg:col-span-7 space-y-4">
-          <div className="relative rounded-2xl overflow-hidden bg-velenora-grey/30 border border-velenora-grey/80 shadow-luxury h-[480px] sm:h-[560px]">
+          <div className="relative rounded-2xl overflow-hidden bg-gradient-to-b from-[#FAFBFD] to-[#F1F3F5] border border-velenora-grey/80 shadow-luxury h-[520px] sm:h-[620px] flex items-center justify-center p-4">
             <img
               src={product.images[activeImageIndex] || product.images[0] || '/images/tryon/men-front-clean.jpg'}
               alt={product.name.fr}
               onError={(e) => {
                 (e.target as HTMLImageElement).src = '/images/tryon/men-front-clean.jpg';
               }}
-              className="w-full h-full object-cover object-top"
+              className="w-full h-full object-contain object-center"
             />
             {product.isCustomizable && (
               <span className="absolute top-4 left-4 bg-velenora-navy/95 backdrop-blur-sm text-velenora-ivory text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
@@ -81,7 +81,7 @@ export const ProductDetailPage: React.FC = () => {
                     activeImageIndex === idx ? 'border-velenora-teal scale-105' : 'border-velenora-grey/60'
                   }`}
                 >
-                  <img src={img} alt="Aperçu" className="w-full h-full object-cover" />
+                  <img src={img} alt="Aperçu" className="w-full h-full object-contain p-1" />
                 </button>
               ))}
             </div>

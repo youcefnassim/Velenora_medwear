@@ -331,14 +331,14 @@ export const BoutiqueManagerTab: React.FC = () => {
             >
               <div>
                 {/* Image and Badges */}
-                <div className="relative h-56 bg-velenora-grey/20 overflow-hidden flex items-center justify-center">
+                <div className="relative h-72 bg-gradient-to-b from-[#FAFBFD] to-[#F1F3F5] overflow-hidden flex items-center justify-center p-2">
                   <img
                     src={prod.images[0] || '/images/tryon/men-front-clean.jpg'}
                     alt={prod.name.fr}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/images/tryon/men-front-clean.jpg';
                     }}
-                    className="w-full h-full object-contain p-2"
+                    className="w-full h-full object-contain"
                   />
 
                   <div className="absolute top-3 left-3 flex flex-col gap-1">
