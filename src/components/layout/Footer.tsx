@@ -132,9 +132,12 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-velenora-ivory/60 gap-4">
-          <p>© {new Date().getFullYear()} {t.footer.rights}</p>
+          <p>© 2026 Velenora Med Wear. Tous droits réservés.</p>
+          <p className="text-xs font-semibold text-velenora-teal-light tracking-wide">
+            designed by Velenora Med Wear 2026
+          </p>
           <p className="flex items-center gap-2">
-            <span>Paiement à la livraison (Cash on Delivery)</span>
+            <span>Paiement à la livraison (58 Wilayas)</span>
             <span>•</span>
             <span>Made with precision in Algeria</span>
           </p>

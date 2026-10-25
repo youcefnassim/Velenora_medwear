@@ -248,7 +248,8 @@ export const HomePage: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Vertical Stacked Cards */}
+          <div className="flex flex-col gap-4 sm:gap-5 max-w-3xl mx-auto">
             {[
               {
                 title: t.benefits.b1Title,
@@ -273,20 +274,34 @@ export const HomePage: React.FC = () => {
             ].map((b, idx) => {
               const IconComp = b.icon;
               return (
-                <div key={idx} className="space-y-3">
-                  <div className="w-11 h-11 rounded-xl bg-velenora-teal/20 text-velenora-teal-light flex items-center justify-center">
-                    <IconComp className="w-5 h-5" />
+                <div
+                  key={idx}
+                  className="p-5 sm:p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 shadow-luxury hover:bg-white/15 hover:border-velenora-teal-light/50 transition-all duration-300 flex items-start sm:items-center gap-4 sm:gap-5 group"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-velenora-teal/25 text-velenora-teal-light border border-velenora-teal/40 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-sm">
+                    <IconComp className="w-6 h-6" />
                   </div>
-                  <h3 className="text-base font-bold text-white">{b.title}</h3>
-                  <p className="text-xs text-velenora-ivory/70 leading-relaxed font-light">
-                    {b.desc}
-                  </p>
+                  <div className="space-y-1">
+                    <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-velenora-teal-light transition-colors">
+                      {b.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-velenora-ivory/80 leading-relaxed font-light">
+                      {b.desc}
+                    </p>
+                  </div>
                 </div>
               );
             })}
           </div>
         </div>
       </section>
+
+      {/* Signature Footer Note */}
+      <div className="relative z-10 text-center pb-4 -mt-12">
+        <p className="text-xs font-serif tracking-widest text-velenora-navy/80 uppercase font-semibold">
+          designed by Velenora Med Wear 2026
+        </p>
+      </div>
     </div>
   );
 };
