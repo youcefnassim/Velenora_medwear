@@ -248,24 +248,51 @@ export const CustomizerStudio: React.FC<CustomizerStudioProps> = ({ baseProduct 
     switch (currentStep) {
       case 'fit':
         return (
-          <div className="grid grid-cols-2 gap-3">
-            {([
-              { id: 'men' as const, label: t.customizer.menFit },
-              { id: 'women' as const, label: t.customizer.womenFit },
-            ]).map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => handleUpdate({ fit: item.id })}
-                className={`py-6 rounded-2xl border text-base font-semibold transition ${
-                  config.fit === item.id
-                    ? 'border-[#142C46] bg-[#142C46] text-white shadow-sm'
-                    : 'border-[#E1E5E8] bg-white text-[#10263B] hover:bg-[#F1F2F3]'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+            {[
+              {
+                id: 'men' as const,
+                label: t.customizer.menFit,
+                desc: 'Coupe droite athlétique',
+                tag: 'HOMME',
+              },
+              {
+                id: 'women' as const,
+                label: t.customizer.womenFit,
+                desc: 'Coupe cintrée féminine',
+                tag: 'FEMME',
+              },
+            ].map((item) => {
+              const isSel = config.fit === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handleUpdate({ fit: item.id })}
+                  className={`py-4 px-3 rounded-xl border text-center transition-all duration-200 flex flex-col items-center justify-center gap-1 ${
+                    isSel
+                      ? 'border-[#142C46] bg-[#142C46] text-white shadow-md'
+                      : 'border-[#E1E5E8] bg-white text-[#10263B] hover:bg-[#F1F2F3] hover:border-[#CAD0D7]'
+                  }`}
+                >
+                  <span
+                    className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                      isSel ? 'bg-white/20 text-[#4FE3C1]' : 'bg-[#F1F2F3] text-[#087A83]'
+                    }`}
+                  >
+                    {item.tag}
+                  </span>
+                  <span className="text-sm sm:text-base font-bold mt-0.5">{item.label}</span>
+                  <span
+                    className={`text-[11px] leading-tight font-light ${
+                      isSel ? 'text-white/80' : 'text-[#667586]'
+                    }`}
+                  >
+                    {item.desc}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         );
 
@@ -986,24 +1013,24 @@ export const CustomizerStudio: React.FC<CustomizerStudioProps> = ({ baseProduct 
 
       <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         <div className="lg:col-span-5 xl:col-span-4 order-2 lg:order-1">
-          <div className="bg-white rounded-2xl border border-[#E1E5E8] shadow-panel p-5 flex flex-col min-h-[420px] lg:min-h-[calc(100vh-220px)]">
-            <div className="mb-4">
+          <div className="bg-white rounded-2xl border border-[#E1E5E8] shadow-panel p-4 sm:p-5 flex flex-col">
+            <div className="mb-3">
               <h2 className="text-base font-serif font-bold text-[#10263B]">
                 {safeStepIndex + 1}. {stepLabel(currentStep)}
               </h2>
-              <p className="text-xs text-[#667586] mt-1 leading-relaxed">{stepHint(currentStep)}</p>
+              <p className="text-xs text-[#667586] mt-0.5 leading-relaxed">{stepHint(currentStep)}</p>
             </div>
 
             {Object.keys(validationErrors).length > 0 && (
-              <div className="mb-4 p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs flex items-center gap-2">
+              <div className="mb-3 p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
                 <span>{Object.values(validationErrors)[0]}</span>
               </div>
             )}
 
-            <div className="flex-1 overflow-y-auto">{renderStepBody()}</div>
+            <div className="overflow-y-auto max-h-[60vh] lg:max-h-[calc(100vh-280px)] pr-0.5">{renderStepBody()}</div>
 
-            <div className="pt-4 mt-4 border-t border-[#E1E5E8] space-y-3">
+            <div className="pt-3 mt-3 border-t border-[#E1E5E8] space-y-3">
               <div className="flex items-baseline justify-between">
                 <span className="text-xs font-medium text-[#667586]">
                   {t.customizer.wizard.estimatedPrice}
