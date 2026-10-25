@@ -108,7 +108,8 @@ export const HomePage: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          {/* 2x2 Grid of Step Cards (2 par 2) */}
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-4 max-w-4xl mx-auto">
             {[
               {
                 num: '01',
@@ -139,21 +140,21 @@ export const HomePage: React.FC = () => {
               return (
                 <div
                   key={idx}
-                  className="p-5 bg-[#F9F7F5] rounded-xl sm:rounded-2xl border border-[#E1E5E8] shadow-sm hover:shadow-md transition duration-300 relative group flex flex-col justify-between"
+                  className="p-3.5 sm:p-5 bg-[#F9F7F5] rounded-xl sm:rounded-2xl border border-[#E1E5E8] shadow-sm hover:shadow-md transition duration-300 relative group flex flex-col justify-between"
                 >
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="w-8 h-8 rounded-lg bg-velenora-teal/10 text-velenora-teal flex items-center justify-center transition group-hover:bg-velenora-teal group-hover:text-white">
-                        <IconComp className="w-4 h-4" />
+                    <div className="flex items-center justify-between mb-2 sm:mb-3">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-velenora-teal/10 text-velenora-teal flex items-center justify-center transition group-hover:bg-velenora-teal group-hover:text-white">
+                        <IconComp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </div>
-                      <span className="text-lg sm:text-xl font-serif font-bold text-[#8A9BA8]">
+                      <span className="text-base sm:text-xl font-serif font-bold text-[#8A9BA8]">
                         {step.num}
                       </span>
                     </div>
-                    <h3 className="text-xs sm:text-sm font-bold text-velenora-navy mb-1">
+                    <h3 className="text-xs sm:text-sm font-bold text-velenora-navy mb-1 leading-snug">
                       {step.title}
                     </h3>
-                    <p className="text-[11px] sm:text-xs text-velenora-charcoal/70 leading-relaxed font-light">
+                    <p className="text-[10px] sm:text-xs text-velenora-charcoal/70 leading-relaxed font-light">
                       {step.desc}
                     </p>
                   </div>
