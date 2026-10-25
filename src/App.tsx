@@ -15,6 +15,7 @@ import { CheckoutPage } from './pages/CheckoutPage';
 import { OrderConfirmationPage } from './pages/OrderConfirmationPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { StoryPage } from './pages/StoryPage';
+import { BackToTop } from './components/common/BackToTop';
 
 // Auto scroll to top on navigation
 const ScrollToTop = () => {
@@ -49,6 +50,7 @@ export const App: React.FC = () => {
               </Routes>
             </main>
             <Footer />
+            <BackToTop />
           </div>
         </CartProvider>
       </I18nProvider>
