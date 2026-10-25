@@ -13,12 +13,11 @@ export const Footer: React.FC = () => {
           {/* Brand Info & Vision (2 Cols) */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-velenora-teal flex items-center justify-center">
-                <svg className="w-5 h-5" viewBox="0 0 64 64" fill="none">
-                  <path d="M18 20L32 46L46 20" stroke="#F8F7F3" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M26 26L32 38L38 26" stroke="#142C46" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
+              <img
+                src="/logo.jpg"
+                alt="Velenora Medical Wear"
+                className="w-10 h-10 rounded-full object-cover shadow-sm border border-amber-300/40"
+              />
               <span className="font-serif text-2xl font-bold tracking-tight text-white">
                 VELENORA
               </span>

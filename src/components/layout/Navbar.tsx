@@ -24,13 +24,20 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Brand Logo & Subtitle */}
-          <Link to="/" className="flex flex-col group py-2 shrink-0">
-            <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-[#10263B] leading-tight">
-              VELENORA
-            </span>
-            <span className="text-[9px] sm:text-[10px] tracking-[0.24em] sm:tracking-[0.28em] font-semibold text-[#667586] uppercase">
-              MEDWEAR
-            </span>
+          <Link to="/" className="flex items-center gap-2.5 group py-2 shrink-0">
+            <img
+              src="/logo.jpg"
+              alt="Velenora Medical Wear"
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover shadow-sm border border-amber-300/30 group-hover:scale-105 transition-transform"
+            />
+            <div className="flex flex-col">
+              <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-[#10263B] leading-tight">
+                VELENORA
+              </span>
+              <span className="text-[9px] sm:text-[10px] tracking-[0.24em] sm:tracking-[0.28em] font-semibold text-[#667586] uppercase">
+                MEDWEAR
+              </span>
+            </div>
           </Link>
 
           {/* Centered Desktop Navigation */}
