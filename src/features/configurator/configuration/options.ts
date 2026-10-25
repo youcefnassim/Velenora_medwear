@@ -10,67 +10,161 @@ import type {
 } from '../../../types/configurator';
 
 export const CURATED_COLORS: ColorDefinition[] = [
+  // 1. Bleus Iconiques
   {
     id: 'navy',
     name: { fr: 'Bleu marine', en: 'Navy Blue', ar: 'أزرق كحلي' },
     hex: '#142C46',
-    fabricTone: 'Matte Luxe'
+    fabricTone: 'Matte Luxe',
   },
   {
     id: 'petrol',
     name: { fr: 'Bleu pétrole', en: 'Petrol Blue', ar: 'أزرق بترولي' },
     hex: '#17475A',
-    fabricTone: 'Deep Sheen'
+    fabricTone: 'Deep Sheen',
   },
   {
-    id: 'black',
-    name: { fr: 'Noir', en: 'Black', ar: 'أسود' },
-    hex: '#1A1C1E',
-    fabricTone: 'Ultra Matte'
+    id: 'royal_blue',
+    name: { fr: 'Bleu roi', en: 'Royal Blue', ar: 'أزرق ملكي' },
+    hex: '#1D4ED8',
+    fabricTone: 'Vibrant Clinic',
   },
   {
-    id: 'grey',
-    name: { fr: 'Gris', en: 'Grey', ar: 'رمادي' },
-    hex: '#7D8B99',
-    fabricTone: 'Heather Grey'
+    id: 'ceil_blue',
+    name: { fr: 'Bleu ciel chirurgical', en: 'Ceil Blue', ar: 'أزرق سماوي جراحي' },
+    hex: '#5C88B0',
+    fabricTone: 'Classic Hospital',
   },
   {
-    id: 'white',
-    name: { fr: 'Blanc', en: 'White', ar: 'أبيض' },
-    hex: '#FFFFFF',
-    fabricTone: 'Optical White'
+    id: 'caribbean',
+    name: { fr: 'Bleu caraïbes', en: 'Caribbean Blue', ar: 'أزرق كاريبي' },
+    hex: '#008080',
+    fabricTone: 'Fresh Clean',
+  },
+  {
+    id: 'hospital_blue',
+    name: { fr: 'Bleu consultation', en: 'Hospital Blue', ar: 'أزرق مستشفى' },
+    hex: '#2B5B84',
+    fabricTone: 'Professional Soft',
+  },
+
+  // 2. Verts Bloc & Médicaux
+  {
+    id: 'surgical_green',
+    name: { fr: 'Vert bloc opératoire', en: 'Surgical Green', ar: 'أخضر غرفة العمليات' },
+    hex: '#2D6A4F',
+    fabricTone: 'Surgical Grade',
+  },
+  {
+    id: 'hunter_green',
+    name: { fr: 'Vert bouteille', en: 'Hunter Green', ar: 'أخضر داكن' },
+    hex: '#1B4332',
+    fabricTone: 'Deep Forest',
   },
   {
     id: 'sage',
     name: { fr: 'Vert sauge', en: 'Sage Green', ar: 'أخضر ميرمية' },
     hex: '#6C8B7F',
-    fabricTone: 'Natural Earth'
+    fabricTone: 'Natural Earth',
+  },
+  {
+    id: 'olive',
+    name: { fr: 'Vert olive', en: 'Olive Green', ar: 'أخضر زيتوني' },
+    hex: '#556B2F',
+    fabricTone: 'Earth Tone',
+  },
+  {
+    id: 'mint',
+    name: { fr: 'Vert menthe douce', en: 'Soft Mint', ar: 'أخضر نعناعي' },
+    hex: '#76A588',
+    fabricTone: 'Calming Pastel',
   },
   {
     id: 'teal',
-    name: { fr: 'Turquoise', en: 'Turquoise / Teal', ar: 'تركواز طبي' },
+    name: { fr: 'Turquoise / Teal', en: 'Medical Teal', ar: 'تركواز طبي' },
     hex: '#087A83',
-    fabricTone: 'Silky Sheen'
+    fabricTone: 'Silky Sheen',
   },
+
+  // 3. Bordeaux, Prunes & Violets
+  {
+    id: 'burgundy',
+    name: { fr: 'Bordeaux royal', en: 'Burgundy Wine', ar: 'عنابي جراحي' },
+    hex: '#5C1D2E',
+    fabricTone: 'Deep Wine',
+  },
+  {
+    id: 'plum',
+    name: { fr: 'Prune profonde', en: 'Plum / Wine', ar: 'خوخي داكن' },
+    hex: '#4A1525',
+    fabricTone: 'Prestige Dark',
+  },
+  {
+    id: 'purple',
+    name: { fr: 'Violet aubergine', en: 'Aubergine Purple', ar: 'بنفسجي باذنجاني' },
+    hex: '#4A3B52',
+    fabricTone: 'Royal Aubergine',
+  },
+  {
+    id: 'lavender',
+    name: { fr: 'Lilas / Lavande', en: 'Lavender', ar: 'خزامى هادئ' },
+    hex: '#9D81BA',
+    fabricTone: 'Soothing Violet',
+  },
+
+  // 4. Roses & Pastels
   {
     id: 'powder',
     name: { fr: 'Rose poudré', en: 'Powder Pink', ar: 'وردي ناعم' },
     hex: '#D8A49B',
-    fabricTone: 'Soft Pastel'
+    fabricTone: 'Soft Pastel',
   },
   {
-    id: 'burgundy',
-    name: { fr: 'Bordeaux', en: 'Burgundy', ar: 'عنابي جراحي' },
-    hex: '#5C1D2E',
-    fabricTone: 'Deep Wine'
+    id: 'coral_rose',
+    name: { fr: 'Rose corail', en: 'Coral Rose', ar: 'وردي مرجاني' },
+    hex: '#D9777F',
+    fabricTone: 'Warm Glow',
   },
   {
-    id: 'purple',
-    name: { fr: 'Violet', en: 'Purple', ar: 'بنفسجي راقي' },
-    hex: '#4A3B52',
-    fabricTone: 'Royal Aubergine'
-  }
+    id: 'peach',
+    name: { fr: 'Pêche douce', en: 'Soft Peach', ar: 'مشمشي فاتح' },
+    hex: '#E8B4A2',
+    fabricTone: 'Delicate Warmth',
+  },
+
+  // 5. Neutres & Élégance Intemporelle
+  {
+    id: 'black',
+    name: { fr: 'Noir carbone', en: 'Carbon Black', ar: 'أسود كربوني' },
+    hex: '#1A1C1E',
+    fabricTone: 'Ultra Matte',
+  },
+  {
+    id: 'charcoal',
+    name: { fr: 'Gris anthracite', en: 'Charcoal Grey', ar: 'رمادي فحمي' },
+    hex: '#374151',
+    fabricTone: 'Executive Steel',
+  },
+  {
+    id: 'grey',
+    name: { fr: 'Gris perle chiné', en: 'Heather Grey', ar: 'رمادي لؤلؤي' },
+    hex: '#7D8B99',
+    fabricTone: 'Heather Grey',
+  },
+  {
+    id: 'white',
+    name: { fr: 'Blanc optique', en: 'Optical White', ar: 'أبيض ناصع' },
+    hex: '#FFFFFF',
+    fabricTone: 'Optical White',
+  },
+  {
+    id: 'khaki',
+    name: { fr: 'Beige sable / Kaki', en: 'Sand Khaki', ar: 'بيج رملي' },
+    hex: '#B8A389',
+    fabricTone: 'Safari Medical',
+  },
 ];
+
 
 export const EMBROIDERY_COLORS = [
   { id: 'white', name: 'Blanc Pur', hex: '#FFFFFF' },

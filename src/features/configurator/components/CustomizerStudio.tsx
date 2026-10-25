@@ -45,6 +45,15 @@ function localizedName(
   return name[language] || name.fr;
 }
 
+const COLOR_CATEGORIES = [
+  { id: 'all', label: 'Toutes (24)' },
+  { id: 'blues', label: 'Bleus (6)', ids: ['navy', 'petrol', 'royal_blue', 'ceil_blue', 'caribbean', 'hospital_blue'] },
+  { id: 'greens', label: 'Verts Bloc (6)', ids: ['surgical_green', 'hunter_green', 'sage', 'olive', 'mint', 'teal'] },
+  { id: 'purples', label: 'Bordeaux (4)', ids: ['burgundy', 'plum', 'purple', 'lavender'] },
+  { id: 'pinks', label: 'Pastels (3)', ids: ['powder', 'coral_rose', 'peach'] },
+  { id: 'neutrals', label: 'Neutres (5)', ids: ['black', 'charcoal', 'grey', 'white', 'khaki'] },
+];
+
 export const CustomizerStudio: React.FC<CustomizerStudioProps> = ({ baseProduct }) => {
   const { t, formatPrice, language } = useI18n();
   const { addItem } = useCart();
@@ -52,6 +61,7 @@ export const CustomizerStudio: React.FC<CustomizerStudioProps> = ({ baseProduct 
 
   const [stepIndex, setStepIndex] = useState(0);
   const [colorTarget, setColorTarget] = useState<'top' | 'pants' | 'details'>('top');
+  const [colorCategory, setColorCategory] = useState<string>('all');
   const [showSizeModal, setShowSizeModal] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
@@ -87,6 +97,13 @@ export const CustomizerStudio: React.FC<CustomizerStudioProps> = ({ baseProduct 
     }
     return ALL_STEPS;
   }, [config.garmentType]);
+
+  const displayedColors = useMemo(() => {
+    if (colorCategory === 'all') return CURATED_COLORS;
+    const cat = COLOR_CATEGORIES.find((c) => c.id === colorCategory);
+    if (!cat || !cat.ids) return CURATED_COLORS;
+    return CURATED_COLORS.filter((c) => cat.ids.includes(c.id));
+  }, [colorCategory]);
 
   useEffect(() => {
     setStepIndex((i) => Math.min(i, steps.length - 1));
@@ -227,13 +244,6 @@ export const CustomizerStudio: React.FC<CustomizerStudioProps> = ({ baseProduct 
     }, 1200);
   };
 
-  const optionBtn = (active: boolean) =>
-    `p-3 rounded-xl border text-center text-sm font-medium transition ${
-      active
-        ? 'border-[#142C46] bg-[#142C46] text-white shadow-sm'
-        : 'border-[#E1E5E8] bg-white text-[#10263B] hover:bg-[#F1F2F3]'
-    }`;
-
   const renderStepBody = () => {
     switch (currentStep) {
       case 'fit':
@@ -292,7 +302,8 @@ export const CustomizerStudio: React.FC<CustomizerStudioProps> = ({ baseProduct 
 
       case 'colors':
         return (
-          <div className="space-y-4">
+          <div className="space-y-3.5">
+            {/* Target Selector Tabs: Haut, Pantalon, Détails */}
             <div className="flex bg-[#F1F2F3] p-1 rounded-xl">
               {(
                 [
@@ -318,32 +329,68 @@ export const CustomizerStudio: React.FC<CustomizerStudioProps> = ({ baseProduct 
                 ))}
             </div>
 
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-[#667586]">{t.customizer.wizard.activeShade}</span>
-              <span className="font-semibold text-[#10263B]">
-                {localizedName(currentColorSelected.name, language)}
+            {/* Active Nuance Live Bar */}
+            <div className="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-[#F8FAFC] to-[#F1F2F3] rounded-xl border border-[#E1E5E8]">
+              <div className="flex items-center gap-2">
+                <span
+                  className="w-5 h-5 rounded-full border border-black/15 shadow-xs shrink-0"
+                  style={{ backgroundColor: currentColorSelected.hex }}
+                />
+                <div>
+                  <span className="block text-xs font-bold text-[#10263B] leading-tight">
+                    {localizedName(currentColorSelected.name, language)}
+                  </span>
+                  <span className="block text-[10px] text-[#667586] leading-none mt-0.5">
+                    {currentColorSelected.fabricTone}
+                  </span>
+                </div>
+              </div>
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-white border border-[#E1E5E8] text-[#142C46]">
+                {currentColorSelected.hex.toUpperCase()}
               </span>
             </div>
 
-            <div className="grid grid-cols-5 gap-3">
-              {CURATED_COLORS.map((col) => {
+            {/* Category Filter Pills: All 24 Colors Accessible */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+              {COLOR_CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setColorCategory(cat.id)}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap transition ${
+                    colorCategory === cat.id
+                      ? 'bg-[#142C46] text-white shadow-xs'
+                      : 'bg-[#F1F2F3] text-[#667586] hover:bg-[#E1E5E8] hover:text-[#10263B]'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Grid of All Available Colors (6 Columns) */}
+            <div className="grid grid-cols-6 gap-2 sm:gap-2.5">
+              {displayedColors.map((col) => {
                 const isSelected = currentColorSelected.id === col.id;
+                const isLight = col.hex === '#FFFFFF' || col.id === 'powder' || col.id === 'peach' || col.id === 'mint';
                 return (
                   <button
                     key={col.id}
                     type="button"
                     onClick={() => handleColorSelect(col)}
-                    className={`relative w-11 h-11 mx-auto rounded-full border-2 flex items-center justify-center transition ${
-                      isSelected ? 'border-[#142C46] scale-110 shadow-sm' : 'border-[#E1E5E8] hover:scale-105'
+                    className={`relative w-10 h-10 sm:w-11 sm:h-11 mx-auto rounded-full border-2 flex items-center justify-center transition-all ${
+                      isSelected
+                        ? 'border-[#142C46] ring-2 ring-offset-2 ring-[#142C46] scale-110 shadow-md'
+                        : 'border-[#E1E5E8] hover:scale-105 hover:border-[#10263B]'
                     }`}
                     style={{ backgroundColor: col.hex }}
-                    title={localizedName(col.name, language)}
+                    title={`${localizedName(col.name, language)} (${col.fabricTone})`}
                     aria-label={localizedName(col.name, language)}
                   >
                     {isSelected && (
                       <Check
-                        className={`w-4 h-4 ${
-                          col.id === 'white' || col.id === 'powder' ? 'text-[#10263B]' : 'text-white'
+                        className={`w-4 h-4 stroke-[2.5] ${
+                          isLight ? 'text-[#10263B]' : 'text-white'
                         }`}
                       />
                     )}
@@ -351,96 +398,206 @@ export const CustomizerStudio: React.FC<CustomizerStudioProps> = ({ baseProduct 
                 );
               })}
             </div>
+
+            {/* Custom HEX Color Picker Option */}
+            <div className="pt-1 flex items-center justify-between text-xs border-t border-[#E1E5E8]">
+              <span className="text-[11px] text-[#667586]">
+                Besoin d'une teinte clinique spécifique ?
+              </span>
+              <label className="inline-flex items-center gap-1.5 cursor-pointer text-[11px] font-semibold text-[#087A83] hover:underline">
+                <span>+ Nuance sur-mesure</span>
+                <input
+                  type="color"
+                  value={currentColorSelected.hex}
+                  onChange={(e) => {
+                    const customHex = e.target.value.toUpperCase();
+                    const customCol: ColorDefinition = {
+                      id: `custom-${customHex}`,
+                      name: { fr: `Sur-mesure ${customHex}`, en: `Custom ${customHex}`, ar: `مخصص ${customHex}` },
+                      hex: customHex,
+                      fabricTone: 'Finition Atelier',
+                    };
+                    handleColorSelect(customCol);
+                  }}
+                  className="w-5 h-5 rounded cursor-pointer border border-[#E1E5E8] p-0"
+                />
+              </label>
+            </div>
           </div>
         );
 
       case 'style':
         return (
-          <div className="space-y-5">
+          <div className="space-y-4">
+            {/* Live Style Active Configuration Summary */}
+            <div className="p-3 bg-[#F8FAFC] rounded-xl border border-[#E1E5E8]">
+              <div className="flex items-center justify-between text-[11px] font-bold text-[#142C46] mb-1.5">
+                <span className="flex items-center gap-1">
+                  <Sparkles className="w-3.5 h-3.5 text-[#087A83]" />
+                  Aperçu de votre configuration de coupe
+                </span>
+                <span className="text-[#087A83]">
+                  {pricing.sleevePriceDZD + pricing.pocketPriceDZD > 0
+                    ? `+${formatPrice(pricing.sleevePriceDZD + pricing.pocketPriceDZD)}`
+                    : 'Inclus'}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-[#E1E5E8] text-[10px] font-semibold text-[#10263B]">
+                  Col: {localizedName(NECKLINE_OPTIONS.find((n) => n.id === config.neckline)?.label || { fr: 'Col V', en: 'V-Neck', ar: 'ياقة V' }, language)}
+                </span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-[#E1E5E8] text-[10px] font-semibold text-[#10263B]">
+                  Manches: {localizedName(SLEEVE_OPTIONS.find((s) => s.id === config.sleeve)?.label || { fr: 'Courtes', en: 'Short', ar: 'قصيرة' }, language)}
+                </span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-[#E1E5E8] text-[10px] font-semibold text-[#10263B]">
+                  Poches: {localizedName(POCKET_OPTIONS.find((p) => p.id === config.pocket)?.label || { fr: 'Standard', en: 'Standard', ar: 'قياسي' }, language)}
+                </span>
+                {config.garmentType !== 'top' && (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-[#E1E5E8] text-[10px] font-semibold text-[#10263B]">
+                    Pantalon: {localizedName(PANTS_FIT_OPTIONS.find((pf) => pf.id === config.pantsFit)?.label || { fr: 'Classique', en: 'Classic', ar: 'كلاسيكي' }, language)}
+                  </span>
+                )}
+              </div>
+            </div>
+
             {config.garmentType !== 'pants' && (
               <>
-                <div className="space-y-2">
-                  <span className="text-xs font-medium text-[#667586]">{t.customizer.neckline}</span>
-                  <div className="grid grid-cols-3 gap-2">
-                    {NECKLINE_OPTIONS.map((neck) => (
-                      <button
-                        key={neck.id}
-                        type="button"
-                        onClick={() => handleUpdate({ neckline: neck.id })}
-                        className={optionBtn(config.neckline === neck.id)}
-                      >
-                        {localizedName(neck.label, language)}
-                      </button>
-                    ))}
+                {/* 1. Type de Col */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-[#10263B]">{t.customizer.neckline}</span>
+                    <span className="text-[10px] text-[#087A83] font-medium">Inclus</span>
                   </div>
-                </div>
-
-                <div className="space-y-2">
-                  <span className="text-xs font-medium text-[#667586]">{t.customizer.sleeves}</span>
-                  <div className="grid grid-cols-2 gap-2">
-                    {SLEEVE_OPTIONS.map((slv) => (
-                      <button
-                        key={slv.id}
-                        type="button"
-                        onClick={() => handleUpdate({ sleeve: slv.id })}
-                        className={optionBtn(config.sleeve === slv.id)}
-                      >
-                        <span>{localizedName(slv.label, language)}</span>
-                        <span
-                          className={`block text-[10px] mt-1 ${
-                            config.sleeve === slv.id ? 'text-white/80' : 'text-[#087A83]'
+                  <div className="grid grid-cols-3 gap-2">
+                    {NECKLINE_OPTIONS.map((neck) => {
+                      const isSel = config.neckline === neck.id;
+                      return (
+                        <button
+                          key={neck.id}
+                          type="button"
+                          onClick={() => handleUpdate({ neckline: neck.id })}
+                          className={`py-2.5 px-2 rounded-xl border text-center text-xs font-semibold transition-all duration-150 flex items-center justify-center gap-1.5 ${
+                            isSel
+                              ? 'border-[#142C46] bg-[#142C46] text-white shadow-sm ring-1 ring-[#142C46]'
+                              : 'border-[#E1E5E8] bg-white text-[#10263B] hover:bg-[#F1F2F3] hover:border-[#CAD0D7]'
                           }`}
                         >
-                          {slv.addonDZD === 0
-                            ? t.customizer.wizard.included
-                            : `+${formatPrice(slv.addonDZD)}`}
-                        </span>
-                      </button>
-                    ))}
+                          {isSel && <Check className="w-3.5 h-3.5 stroke-[2.5] text-white shrink-0" />}
+                          <span>{localizedName(neck.label, language)}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <span className="text-xs font-medium text-[#667586]">{t.customizer.pockets}</span>
-                  <div className="grid grid-cols-3 gap-2">
-                    {POCKET_OPTIONS.map((pock) => (
-                      <button
-                        key={pock.id}
-                        type="button"
-                        onClick={() => handleUpdate({ pocket: pock.id })}
-                        className={optionBtn(config.pocket === pock.id)}
-                      >
-                        <span>{localizedName(pock.label, language)}</span>
-                        {pock.addonDZD > 0 && (
+                {/* 2. Longueur des Manches */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-[#10263B]">{t.customizer.sleeves}</span>
+                    <span className="text-[10px] text-[#667586]">
+                      {config.sleeve === 'long' ? '+700 DZD' : 'Inclus'}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {SLEEVE_OPTIONS.map((slv) => {
+                      const isSel = config.sleeve === slv.id;
+                      return (
+                        <button
+                          key={slv.id}
+                          type="button"
+                          onClick={() => handleUpdate({ sleeve: slv.id })}
+                          className={`py-2.5 px-3 rounded-xl border text-center transition-all duration-150 ${
+                            isSel
+                              ? 'border-[#142C46] bg-[#142C46] text-white shadow-sm ring-1 ring-[#142C46]'
+                              : 'border-[#E1E5E8] bg-white text-[#10263B] hover:bg-[#F1F2F3] hover:border-[#CAD0D7]'
+                          }`}
+                        >
+                          <div className="flex items-center justify-center gap-1.5 text-xs font-semibold">
+                            {isSel && <Check className="w-3.5 h-3.5 stroke-[2.5] text-white shrink-0" />}
+                            <span>{localizedName(slv.label, language)}</span>
+                          </div>
                           <span
-                            className={`block text-[10px] mt-1 ${
-                              config.pocket === pock.id ? 'text-white/80' : 'text-[#087A83]'
+                            className={`block text-[10px] mt-0.5 font-medium ${
+                              isSel ? 'text-white/85' : 'text-[#087A83]'
                             }`}
                           >
-                            +{formatPrice(pock.addonDZD)}
+                            {slv.addonDZD === 0
+                              ? t.customizer.wizard.included
+                              : `+${formatPrice(slv.addonDZD)}`}
                           </span>
-                        )}
-                      </button>
-                    ))}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* 3. Configuration des Poches */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-[#10263B]">{t.customizer.pockets}</span>
+                    <span className="text-[10px] text-[#667586]">
+                      {config.pocket === 'single_chest' ? 'Inclus' : config.pocket === 'double_chest' ? '+400 DZD' : '+700 DZD'}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {POCKET_OPTIONS.map((pock) => {
+                      const isSel = config.pocket === pock.id;
+                      return (
+                        <button
+                          key={pock.id}
+                          type="button"
+                          onClick={() => handleUpdate({ pocket: pock.id })}
+                          className={`py-2 px-1.5 rounded-xl border text-center transition-all duration-150 ${
+                            isSel
+                              ? 'border-[#142C46] bg-[#142C46] text-white shadow-sm ring-1 ring-[#142C46]'
+                              : 'border-[#E1E5E8] bg-white text-[#10263B] hover:bg-[#F1F2F3] hover:border-[#CAD0D7]'
+                          }`}
+                        >
+                          <div className="flex items-center justify-center gap-1 text-xs font-semibold">
+                            {isSel && <Check className="w-3 h-3 stroke-[2.5] text-white shrink-0" />}
+                            <span className="truncate">{localizedName(pock.label, language)}</span>
+                          </div>
+                          <span
+                            className={`block text-[9.5px] mt-0.5 font-medium ${
+                              isSel ? 'text-white/85' : 'text-[#087A83]'
+                            }`}
+                          >
+                            {pock.addonDZD > 0 ? `+${formatPrice(pock.addonDZD)}` : t.customizer.wizard.included}
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               </>
             )}
 
             {config.garmentType !== 'top' && (
-              <div className="space-y-2">
-                <span className="text-xs font-medium text-[#667586]">{t.customizer.pantsFit}</span>
+              /* 4. Coupe du Pantalon */
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-[#10263B]">{t.customizer.pantsFit}</span>
+                  <span className="text-[10px] text-[#087A83] font-medium">Inclus</span>
+                </div>
                 <div className="grid grid-cols-3 gap-2">
-                  {PANTS_FIT_OPTIONS.map((pFit) => (
-                    <button
-                      key={pFit.id}
-                      type="button"
-                      onClick={() => handleUpdate({ pantsFit: pFit.id })}
-                      className={optionBtn(config.pantsFit === pFit.id)}
-                    >
-                      {localizedName(pFit.label, language)}
-                    </button>
-                  ))}
+                  {PANTS_FIT_OPTIONS.map((pFit) => {
+                    const isSel = config.pantsFit === pFit.id;
+                    return (
+                      <button
+                        key={pFit.id}
+                        type="button"
+                        onClick={() => handleUpdate({ pantsFit: pFit.id })}
+                        className={`py-2.5 px-2 rounded-xl border text-center text-xs font-semibold transition-all duration-150 flex items-center justify-center gap-1.5 ${
+                          isSel
+                            ? 'border-[#142C46] bg-[#142C46] text-white shadow-sm ring-1 ring-[#142C46]'
+                            : 'border-[#E1E5E8] bg-white text-[#10263B] hover:bg-[#F1F2F3] hover:border-[#CAD0D7]'
+                        }`}
+                      >
+                        {isSel && <Check className="w-3.5 h-3.5 stroke-[2.5] text-white shrink-0" />}
+                        <span>{localizedName(pFit.label, language)}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -449,7 +606,8 @@ export const CustomizerStudio: React.FC<CustomizerStudioProps> = ({ baseProduct 
 
       case 'embroidery':
         return (
-          <div className="space-y-4">
+          <div className="space-y-2.5">
+            {/* Ultra-Compact Toggle Bar */}
             <button
               type="button"
               onClick={() =>
@@ -457,199 +615,238 @@ export const CustomizerStudio: React.FC<CustomizerStudioProps> = ({ baseProduct 
                   embroidery: {
                     ...config.embroidery,
                     enabled: !config.embroidery.enabled,
-                    line1: !config.embroidery.enabled ? config.embroidery.line1 : '',
-                    line2: !config.embroidery.enabled ? config.embroidery.line2 : '',
+                    line1: !config.embroidery.enabled ? (config.embroidery.line1 || 'Dr. ') : '',
                   },
                 })
               }
-              className={`w-full p-4 rounded-2xl border text-left transition flex items-start gap-3 ${
+              className={`w-full py-2.5 px-3 rounded-xl border text-left transition flex items-center justify-between ${
                 config.embroidery.enabled
-                  ? 'border-[#087A83] bg-[#087A83]/5'
+                  ? 'border-[#087A83] bg-[#087A83]/5 ring-1 ring-[#087A83]'
                   : 'border-[#E1E5E8] bg-white hover:bg-[#F1F2F3]'
               }`}
             >
-              <span
-                className={`mt-0.5 w-5 h-5 rounded-md border flex items-center justify-center shrink-0 ${
-                  config.embroidery.enabled
-                    ? 'bg-[#087A83] border-[#087A83] text-white'
-                    : 'border-[#E1E5E8] bg-white'
-                }`}
-              >
-                {config.embroidery.enabled && <Check className="w-3.5 h-3.5" />}
-              </span>
-              <span>
-                <span className="block text-sm font-semibold text-[#10263B]">
-                  {t.customizer.embroiderySection}
-                </span>
-                <span className="block text-xs text-[#667586] mt-1">
-                  {t.customizer.wizard.enableEmbroideryDynamic.replace(
-                    '{price}',
-                    formatPrice(EMBROIDERY_PRICE_DZD)
-                  )}
-                </span>
+              <div className="flex items-center gap-2.5">
+                <div
+                  className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 ${
+                    config.embroidery.enabled
+                      ? 'bg-[#087A83] border-[#087A83] text-white'
+                      : 'border-[#CAD0D7] bg-white'
+                  }`}
+                >
+                  {config.embroidery.enabled && <Check className="w-3 h-3 stroke-[3]" />}
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-[#10263B]">
+                    {t.customizer.embroiderySection}
+                  </span>
+                  <span className="text-[11px] text-[#087A83] font-semibold ml-2">
+                    +{formatPrice(EMBROIDERY_PRICE_DZD)}
+                  </span>
+                </div>
+              </div>
+              <span className="text-[10px] text-[#667586] font-medium hidden sm:inline">
+                {config.embroidery.enabled ? 'Activée' : 'Désactivée'}
               </span>
             </button>
 
+            {/* When Enabled: Ultra-Compact High-Density Configuration */}
             {config.embroidery.enabled && (
-              <div className="space-y-4 animate-fade-in">
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-medium text-[#10263B]">
-                      {t.customizer.nameLabel}
-                    </label>
-                    <span className="text-[10px] text-[#667586]">
-                      {config.embroidery.line1.length} / 30
-                    </span>
+              <div className="space-y-2.5 pt-0.5 animate-fade-in">
+                {/* Compact 2-Column Inputs */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <div className="flex items-center justify-between text-[11px] font-semibold text-[#10263B] mb-0.5">
+                      <span>{t.customizer.nameLabel}</span>
+                      <span className="text-[10px] text-[#667586]">{config.embroidery.line1.length}/30</span>
+                    </div>
+                    <input
+                      type="text"
+                      maxLength={30}
+                      value={config.embroidery.line1}
+                      onChange={(e) =>
+                        handleUpdate({
+                          embroidery: { ...config.embroidery, line1: e.target.value, enabled: true },
+                        })
+                      }
+                      placeholder={t.customizer.namePlaceholder}
+                      className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-[#CAD0D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#087A83] transition"
+                    />
                   </div>
-                  <input
-                    type="text"
-                    maxLength={30}
-                    value={config.embroidery.line1}
-                    onChange={(e) =>
-                      handleUpdate({
-                        embroidery: { ...config.embroidery, line1: e.target.value, enabled: true },
-                      })
-                    }
-                    placeholder={t.customizer.namePlaceholder}
-                    autoFocus
-                    className="w-full px-3.5 py-3 text-sm rounded-xl border border-[#E1E5E8] bg-white focus:outline-none focus:ring-2 focus:ring-[#087A83]"
-                  />
+
+                  <div>
+                    <div className="flex items-center justify-between text-[11px] font-semibold text-[#10263B] mb-0.5">
+                      <span>{t.customizer.specialtyLabel}</span>
+                      <span className="text-[10px] text-[#667586]">{config.embroidery.line2.length}/30</span>
+                    </div>
+                    <input
+                      type="text"
+                      maxLength={30}
+                      value={config.embroidery.line2}
+                      onChange={(e) =>
+                        handleUpdate({
+                          embroidery: { ...config.embroidery, line2: e.target.value, enabled: true },
+                        })
+                      }
+                      placeholder={t.customizer.specialtyPlaceholder}
+                      className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-[#CAD0D7] bg-white focus:outline-none focus:ring-1 focus:ring-[#087A83] transition"
+                    />
+                  </div>
                 </div>
 
+                {/* Compact Font Selector (Segmented 3-Button Control) */}
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-medium text-[#10263B]">
-                      {t.customizer.specialtyLabel}
-                    </label>
-                    <span className="text-[10px] text-[#667586]">
-                      {config.embroidery.line2.length} / 30
-                    </span>
-                  </div>
-                  <input
-                    type="text"
-                    maxLength={30}
-                    value={config.embroidery.line2}
-                    onChange={(e) =>
-                      handleUpdate({
-                        embroidery: { ...config.embroidery, line2: e.target.value, enabled: true },
-                      })
-                    }
-                    placeholder={t.customizer.specialtyPlaceholder}
-                    className="w-full px-3.5 py-3 text-sm rounded-xl border border-[#E1E5E8] bg-white focus:outline-none focus:ring-2 focus:ring-[#087A83]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-[#10263B] mb-1.5">
+                  <span className="block text-[11px] font-semibold text-[#10263B] mb-1">
                     {t.customizer.fontLabel}
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {EMBROIDERY_FONTS.map((f) => (
-                      <button
-                        key={f.id}
-                        type="button"
-                        onClick={() =>
-                          handleUpdate({ embroidery: { ...config.embroidery, font: f.id } })
-                        }
-                        className={optionBtn(config.embroidery.font === f.id)}
-                      >
-                        {f.id === 'classic_serif'
-                          ? t.customizer.classicSerif
-                          : f.id === 'modern_sans'
-                            ? t.customizer.modernSans
-                            : t.customizer.scriptFont}
-                      </button>
-                    ))}
+                  </span>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {EMBROIDERY_FONTS.map((f) => {
+                      const isSel = config.embroidery.font === f.id;
+                      return (
+                        <button
+                          key={f.id}
+                          type="button"
+                          onClick={() =>
+                            handleUpdate({ embroidery: { ...config.embroidery, font: f.id } })
+                          }
+                          className={`py-1.5 px-2 rounded-lg border text-xs text-center font-medium transition flex items-center justify-center gap-1 ${
+                            isSel
+                              ? 'border-[#142C46] bg-[#142C46] text-white shadow-xs'
+                              : 'border-[#E1E5E8] bg-white text-[#10263B] hover:bg-[#F1F2F3]'
+                          }`}
+                        >
+                          {isSel && <Check className="w-3 h-3 shrink-0 stroke-[2.5]" />}
+                          <span
+                            className={
+                              f.id === 'classic_serif'
+                                ? 'font-serif'
+                                : f.id === 'script'
+                                  ? 'italic font-serif'
+                                  : 'font-sans'
+                            }
+                          >
+                            {f.id === 'classic_serif'
+                              ? 'Sérif Élégant'
+                              : f.id === 'modern_sans'
+                                ? 'Moderne'
+                                : 'Cursive'}
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
+                {/* Compact Thread Color Swatches */}
                 <div>
-                  <label className="block text-xs font-medium text-[#10263B] mb-1.5">
-                    {t.customizer.embroideryColor}
-                  </label>
-                  <div className="flex items-center gap-2.5 flex-wrap">
-                    {EMBROIDERY_COLORS.map((col) => (
-                      <button
-                        key={col.id}
-                        type="button"
-                        onClick={() =>
-                          handleUpdate({
-                            embroidery: {
-                              ...config.embroidery,
-                              colorHex: col.hex,
-                              colorName: col.name,
-                            },
-                          })
-                        }
-                        className={`w-8 h-8 rounded-full border-2 transition ${
-                          config.embroidery.colorHex === col.hex
-                            ? 'border-[#142C46] scale-110'
-                            : 'border-[#E1E5E8]'
-                        }`}
-                        style={{ backgroundColor: col.hex }}
-                        title={col.name}
-                      />
-                    ))}
+                  <div className="flex items-center justify-between text-[11px] mb-1">
+                    <span className="font-semibold text-[#10263B]">{t.customizer.embroideryColor}</span>
+                    <span className="text-[10px] text-[#087A83] font-semibold">
+                      {config.embroidery.colorName}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {EMBROIDERY_COLORS.map((col) => {
+                      const isSel = config.embroidery.colorHex === col.hex;
+                      return (
+                        <button
+                          key={col.id}
+                          type="button"
+                          onClick={() =>
+                            handleUpdate({
+                              embroidery: {
+                                ...config.embroidery,
+                                colorHex: col.hex,
+                                colorName: col.name,
+                              },
+                            })
+                          }
+                          className={`w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all ${
+                            isSel
+                              ? 'border-[#142C46] ring-2 ring-offset-1 ring-[#142C46] scale-110 shadow-sm'
+                              : 'border-[#E1E5E8] hover:scale-105'
+                          }`}
+                          style={{ backgroundColor: col.hex }}
+                          title={col.name}
+                        >
+                          {isSel && (
+                            <Check
+                              className={`w-3.5 h-3.5 stroke-[3] ${
+                                col.hex === '#FFFFFF' ? 'text-[#10263B]' : 'text-white'
+                              }`}
+                            />
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
+                {/* Compact Placement (3-Column Segmented Row instead of tall cards) */}
                 <div>
-                  <label className="block text-xs font-medium text-[#10263B] mb-1.5">
+                  <span className="block text-[11px] font-semibold text-[#10263B] mb-1">
                     {t.customizer.positionLabel}
-                  </label>
-                  <div className="space-y-2">
-                    {EMBROIDERY_POSITIONS.map((pos) => (
-                      <button
-                        key={pos.id}
-                        type="button"
-                        onClick={() =>
-                          handleUpdate({
-                            embroidery: { ...config.embroidery, position: pos.id },
-                          })
-                        }
-                        className={`w-full p-3 rounded-xl border text-left text-sm font-medium transition flex items-center justify-between ${
-                          config.embroidery.position === pos.id
-                            ? 'border-[#142C46] bg-[#142C46] text-white shadow-sm'
-                            : 'border-[#E1E5E8] text-[#10263B] hover:bg-[#F1F2F3]'
-                        }`}
-                      >
-                        <span>{localizedName(pos.label, language)}</span>
-                        {config.embroidery.position === pos.id && (
-                          <Check className="w-4 h-4 text-white" />
-                        )}
-                      </button>
-                    ))}
+                  </span>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {EMBROIDERY_POSITIONS.map((pos) => {
+                      const isSel = config.embroidery.position === pos.id;
+                      return (
+                        <button
+                          key={pos.id}
+                          type="button"
+                          onClick={() =>
+                            handleUpdate({
+                              embroidery: { ...config.embroidery, position: pos.id },
+                            })
+                          }
+                          className={`py-1.5 px-2 rounded-lg border text-xs text-center font-medium transition flex items-center justify-center gap-1 ${
+                            isSel
+                              ? 'border-[#142C46] bg-[#142C46] text-white shadow-xs'
+                              : 'border-[#E1E5E8] bg-white text-[#10263B] hover:bg-[#F1F2F3]'
+                          }`}
+                        >
+                          {isSel && <Check className="w-3 h-3 shrink-0 stroke-[2.5]" />}
+                          <span>
+                            {pos.id === 'left_chest'
+                              ? 'Côté Cœur'
+                              : pos.id === 'right_chest'
+                                ? 'Côté Droit'
+                                : 'Manche'}
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
-                <div className="p-4 bg-[#F1F2F3] rounded-2xl border border-[#E1E5E8] text-center">
-                  <span className="text-[10px] uppercase tracking-wider text-[#667586] font-semibold flex items-center justify-center gap-1.5 mb-2">
-                    <Sparkles className="w-3.5 h-3.5" />
+                {/* Ultra-Compact Live Embroidery Preview Badge */}
+                <div className="py-2 px-3 bg-gradient-to-r from-[#142C46]/5 to-[#087A83]/5 rounded-xl border border-[#E1E5E8] flex items-center justify-between">
+                  <span className="text-[10px] uppercase tracking-wider text-[#667586] font-semibold flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-[#087A83]" />
                     {t.customizer.wizard.embroideryPreview}
                   </span>
                   <div
-                    className="p-4 bg-white rounded-xl border border-[#E1E5E8] inline-block min-w-[220px]"
+                    className="px-2.5 py-1 rounded-md bg-[#142C46] border border-white/20 text-right shadow-xs min-w-[140px]"
                     style={{
-                      color:
-                        config.embroidery.colorHex === '#FFFFFF'
-                          ? '#142C46'
-                          : config.embroidery.colorHex,
+                      color: config.embroidery.colorHex,
+                      textShadow: '0 1px 2px rgba(0,0,0,0.9)',
                     }}
                   >
-                    <p
-                      className={`text-sm font-bold ${
+                    <span
+                      className={`text-xs font-bold block leading-none truncate ${
                         config.embroidery.font === 'classic_serif'
                           ? 'font-serif'
                           : config.embroidery.font === 'script'
                             ? 'italic font-serif'
-                            : 'tracking-wide'
+                            : 'tracking-wide font-sans'
                       }`}
                     >
                       {config.embroidery.line1.trim() || t.customizer.wizard.yourNameHere}
-                    </p>
-                    <p className="text-xs italic mt-1 text-[#667586]">
-                      {config.embroidery.line2.trim() || t.customizer.wizard.yourTitleHere}
-                    </p>
+                    </span>
+                    {config.embroidery.line2.trim() && (
+                      <span className="text-[9px] opacity-85 block leading-tight mt-0.5 truncate">
+                        {config.embroidery.line2.trim()}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

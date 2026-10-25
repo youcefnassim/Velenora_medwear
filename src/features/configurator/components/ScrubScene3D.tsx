@@ -52,6 +52,7 @@ export const ScrubScene3D: React.FC<ScrubScene3DProps> = ({ config }) => {
       <RealisticTryOnPreview
         config={config}
         orientation={activeOrientation}
+        onOrientationChange={setActiveOrientation}
         isAutoRotating={true}
         zoomLevel={zoomLevel}
       />
