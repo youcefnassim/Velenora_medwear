@@ -18,119 +18,74 @@ export const HomePage: React.FC = () => {
       {/* ======================================================== */}
       {/* 1. HERO SECTION (Video background contained STRICTLY)    */}
       {/* ======================================================== */}
-      <section className="relative overflow-hidden pt-6 pb-8 lg:pt-12 lg:pb-16 border-b border-white/40">
-        {/* Luxury Background Video confined to Hero only (no leaking between sections) */}
+      <section className="relative overflow-hidden pt-8 pb-10 sm:pt-14 sm:pb-16 lg:pt-20 lg:pb-24 border-b border-white/40 min-h-[70vh] sm:min-h-[75vh] flex items-center justify-center">
+        {/* Luxury Background Video centered perfectly */}
         <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
           <video
             autoPlay
             loop
             muted
             playsInline
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-[center_20%] sm:object-[center_25%]"
             src="/velenora.mp4"
           />
           {/* Crystal-clear luxury scrim */}
-          <div className="absolute inset-0 bg-white/25 backdrop-blur-[0.5px]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white/60" />
+          <div className="absolute inset-0 bg-white/20 sm:bg-white/15 backdrop-blur-[0.5px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/35 via-transparent to-white/60" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
-            {/* Left Content (7 cols) */}
-            <div className="lg:col-span-7 space-y-4 sm:space-y-5 bg-white/85 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none p-5 sm:p-7 lg:p-0 rounded-2xl sm:rounded-3xl border border-white/60 lg:border-none shadow-luxury lg:shadow-none">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-velenora-teal/15 border border-velenora-teal/30 text-velenora-teal text-[11px] font-semibold tracking-wide uppercase shadow-sm">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>{t.hero.badge}</span>
-              </div>
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
+          {/* Centered Glassmorphic Showcase Badge */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-velenora-teal/30 text-velenora-teal text-[11px] sm:text-xs font-semibold tracking-wide uppercase shadow-sm mb-4">
+            <Sparkles className="w-3.5 h-3.5 text-velenora-teal" />
+            <span>{t.hero.badge}</span>
+          </div>
 
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-serif font-bold text-velenora-navy tracking-tight leading-[1.15]">
-                {t.hero.title}
-              </h1>
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-velenora-navy tracking-tight leading-[1.15] drop-shadow-sm">
+            {t.hero.title}
+          </h1>
 
-              <p className="text-xs sm:text-base text-velenora-charcoal/90 leading-relaxed max-w-2xl font-light">
-                {t.hero.subtitle}
-              </p>
+          <p className="text-xs sm:text-base lg:text-lg text-velenora-charcoal/90 leading-relaxed max-w-2xl mx-auto font-light mt-3 sm:mt-4 bg-white/70 sm:bg-white/50 backdrop-blur-sm p-3.5 sm:p-4 rounded-2xl border border-white/60 shadow-sm">
+            {t.hero.subtitle}
+          </p>
 
-              {/* CTAs */}
-              <div className="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
-                <Link
-                  to="/customizer"
-                  className="px-6 py-3.5 rounded-xl bg-velenora-teal hover:bg-velenora-teal-light text-white font-semibold text-xs sm:text-sm shadow-luxury hover:shadow-luxury-lg transition-all flex items-center justify-center gap-2 group"
-                >
-                  <Sparkles className="w-4 h-4 text-white group-hover:rotate-12 transition-transform" />
-                  <span>{t.hero.ctaPrimary}</span>
-                  <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
-                </Link>
+          {/* Centered Action CTAs */}
+          <div className="pt-4 sm:pt-5 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+            <Link
+              to="/customizer"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-velenora-teal hover:bg-velenora-teal-light text-white font-semibold text-xs sm:text-sm shadow-luxury hover:shadow-luxury-lg transition-all flex items-center justify-center gap-2 group"
+            >
+              <Sparkles className="w-4 h-4 text-white group-hover:rotate-12 transition-transform" />
+              <span>{t.hero.ctaPrimary}</span>
+              <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
+            </Link>
 
-                <Link
-                  to="/catalog"
-                  className="px-6 py-3.5 rounded-xl bg-white hover:bg-velenora-grey/50 text-velenora-navy font-semibold text-xs sm:text-sm border border-velenora-grey/80 shadow-sm transition-all flex items-center justify-center gap-2"
-                >
-                  <span>{t.hero.ctaSecondary}</span>
-                </Link>
-              </div>
+            <Link
+              to="/catalog"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white/95 hover:bg-white text-velenora-navy font-semibold text-xs sm:text-sm border border-velenora-grey/80 shadow-sm transition-all flex items-center justify-center gap-2"
+            >
+              <span>{t.hero.ctaSecondary}</span>
+            </Link>
+          </div>
 
-              {/* Trust Indicators */}
-              <div className="pt-3 border-t border-velenora-navy/15 grid grid-cols-3 gap-2 sm:gap-4 text-[11px] sm:text-xs text-velenora-charcoal/90 font-medium">
-                <div>
-                  <span className="font-bold text-velenora-navy block text-xs sm:text-sm">58 Wilayas</span>
-                  <span>Paiement à la livraison</span>
-                </div>
-                <div>
-                  <span className="font-bold text-velenora-navy block text-xs sm:text-sm">3D Live</span>
-                  <span>Broderie temps réel</span>
-                </div>
-                <div>
-                  <span className="font-bold text-velenora-navy block text-xs sm:text-sm">VeloTech™ 4D</span>
-                  <span>Tissu antibactérien</span>
-                </div>
-              </div>
+          {/* Centered Trust Indicators */}
+          <div className="mt-6 pt-3 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-[11px] sm:text-xs text-velenora-charcoal/90 font-medium bg-white/75 sm:bg-white/45 backdrop-blur-sm py-2 px-5 sm:px-6 rounded-2xl mx-auto w-fit border border-white/60 shadow-sm">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="font-bold text-velenora-navy">58 Wilayas</span>
+              <span className="text-velenora-charcoal/70 hidden sm:inline">Paiement à la livraison</span>
             </div>
-
-            {/* Right Visual Stage (5 cols) -> Dedicated 'Personnalisez votre tenue' Atelier card */}
-            <div className="lg:col-span-5 flex items-center justify-center">
-              <div className="w-full max-w-md p-5 sm:p-7 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#142C46]/95 via-[#10263B]/95 to-[#0D1F30]/95 backdrop-blur-md text-white shadow-xl border border-white/20 text-center relative overflow-hidden group">
-                {/* Decorative background glow */}
-                <div className="absolute -top-16 -right-16 w-36 h-36 bg-[#087A83]/30 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute -bottom-16 -left-16 w-36 h-36 bg-[#087A83]/25 rounded-full blur-3xl pointer-events-none" />
-
-                <div className="relative z-10 space-y-3 sm:space-y-3.5">
-                  <div className="w-14 h-14 mx-auto rounded-full overflow-hidden shadow-lg border-2 border-amber-300/40 p-0.5 bg-[#0D1F30]">
-                    <img src="/logo.jpg" alt="Velenora Medical Wear" className="w-full h-full object-cover rounded-full" />
-                  </div>
-
-                  <div>
-                    <span className="text-[11px] uppercase tracking-widest text-[#4FE3C1] font-bold">
-                      Atelier 3D Interactif
-                    </span>
-                    <h3 className="text-xl sm:text-2xl font-serif font-bold text-white mt-0.5">
-                      Confectionnez Votre Tenue
-                    </h3>
-                    <p className="text-xs text-[#F9F7F5]/80 mt-1 leading-relaxed">
-                      Visualisez votre uniforme médical sous tous les angles avec notre configurateur 360° en temps réel.
-                    </p>
-                  </div>
-
-                  <div className="pt-1">
-                    <Link
-                      to="/customizer"
-                      className="w-full py-3.5 px-5 rounded-xl bg-[#087A83] hover:bg-[#0aa2ae] text-white font-bold text-xs sm:text-sm shadow-luxury transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
-                    >
-                      <Sparkles className="w-4 h-4 text-white" />
-                      <span>Personnalisez votre tenue</span>
-                      <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-                    </Link>
-                  </div>
-
-                  <div className="pt-1.5 flex items-center justify-center gap-2 text-[10px] sm:text-[11px] text-[#F9F7F5]/70 border-t border-white/10">
-                    <span>Rotation 360°</span>
-                    <span>•</span>
-                    <span>Broderie en Direct</span>
-                    <span>•</span>
-                    <span>58 Wilayas</span>
-                  </div>
-                </div>
-              </div>
+            <span className="text-velenora-navy/30">•</span>
+            <div className="flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-velenora-teal" />
+              <span className="font-bold text-velenora-navy">3D Live</span>
+              <span className="text-velenora-charcoal/70 hidden sm:inline">Broderie temps réel</span>
+            </div>
+            <span className="text-velenora-navy/30">•</span>
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-velenora-teal" />
+              <span className="font-bold text-velenora-navy">VeloTech™ 4D</span>
+              <span className="text-velenora-charcoal/70 hidden sm:inline">Tissu antibactérien</span>
             </div>
           </div>
         </div>

@@ -22,26 +22,26 @@ export const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 w-full bg-white border-b border-[#E1E5E8] shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Brand Logo & Subtitle */}
-          <Link to="/" className="flex items-center gap-2.5 group py-2 shrink-0">
+          <Link to="/" className="flex items-center gap-2 group py-1 shrink-0">
             <img
               src="/logo.jpg"
               alt="Velenora Medical Wear"
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover shadow-sm border border-amber-300/30 group-hover:scale-105 transition-transform"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover shadow-sm border border-amber-300/30 group-hover:scale-105 transition-transform"
             />
             <div className="flex flex-col">
-              <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-[#10263B] leading-tight">
+              <span className="font-serif text-lg sm:text-xl font-bold tracking-tight text-[#10263B] leading-tight">
                 VELENORA
               </span>
-              <span className="text-[9px] sm:text-[10px] tracking-[0.24em] sm:tracking-[0.28em] font-semibold text-[#667586] uppercase">
+              <span className="text-[8px] sm:text-[9px] tracking-[0.22em] sm:tracking-[0.26em] font-semibold text-[#667586] uppercase">
                 MEDWEAR
               </span>
             </div>
           </Link>
 
           {/* Centered Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8 text-sm font-medium text-[#10263B]">
+          <nav className="hidden lg:flex items-center space-x-7 text-xs sm:text-sm font-medium text-[#10263B]">
             <Link
               to="/catalog"
               className={`pb-1 transition hover:text-[#087A83] ${
@@ -91,20 +91,20 @@ export const Navbar: React.FC = () => {
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="p-2 text-[#10263B] hover:text-[#087A83] rounded-lg transition"
+              className="p-1.5 sm:p-2 text-[#10263B] hover:text-[#087A83] rounded-lg transition"
               aria-label="Rechercher"
             >
-              <Search className="w-5 h-5" />
+              <Search className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
             </button>
 
             {/* Account Icon */}
             <button
               type="button"
               onClick={() => setAccountOpen(true)}
-              className="p-2 text-[#10263B] hover:text-[#087A83] rounded-lg transition"
+              className="p-1.5 sm:p-2 text-[#10263B] hover:text-[#087A83] rounded-lg transition"
               aria-label="Mon Compte"
             >
-              <User className="w-5 h-5" />
+              <User className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
             </button>
 
             {/* Language Switcher */}
